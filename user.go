@@ -1,4 +1,4 @@
-package nimserversdk
+package yunxin
 
 import (
 	"encoding/json"
@@ -82,6 +82,17 @@ const (
 type User struct {
 	APPKEY    string
 	APPSECRET string
+	PREFIX    string
+}
+
+var YxClient *User
+
+func NewUser(appKey, appSecret, prefix string) *User {
+	return &User{
+		APPKEY:    appKey,
+		APPSECRET: appSecret,
+		PREFIX:    prefix,
+	}
 }
 
 var client = http.DefaultClient
@@ -116,6 +127,7 @@ type Uinfos struct {
 
 // Create ...
 func (this *User) Create(accid string) (*TokenRespose, error) {
+	accid = this.PREFIX + accid
 	req, err := http.NewRequest("POST", ACTION_USER_CREATE, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
@@ -142,6 +154,7 @@ func (this *User) Create(accid string) (*TokenRespose, error) {
 
 // Update ...
 func (this *User) Update(accid, props, token string) (*BaseResp, error) {
+	accid = this.PREFIX + accid
 	req, err := http.NewRequest("POST", ACTION_USER_UPDATE, strings.NewReader(url.Values{"accid": {accid}, "props": {props}, "token": {token}}.Encode()))
 	if err != nil {
 		return nil, err
@@ -171,6 +184,7 @@ func (this *User) Update(accid, props, token string) (*BaseResp, error) {
 
 // RefreshToken ...
 func (this *User) RefreshToken(accid string) (*TokenRespose, error) {
+	accid = this.PREFIX + accid
 	resBody, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_REFRESH_TOKEN, url.Values{"accid": {accid}})
 	if err != nil {
 		return nil, err
@@ -188,6 +202,7 @@ func (this *User) RefreshToken(accid string) (*TokenRespose, error) {
 
 // Block ...
 func (this *User) Block(accid string) (*BaseResp, error) {
+	accid = this.PREFIX + accid
 	req, err := http.NewRequest("POST", ACTION_USER_BLOCK, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
@@ -212,6 +227,7 @@ func (this *User) Block(accid string) (*BaseResp, error) {
 
 // UnBlock ...
 func (this *User) UnBlock(accid string) (*BaseResp, error) {
+	accid = this.PREFIX + accid
 	req, err := http.NewRequest("POST", ACTION_USER_UNBLOCK, strings.NewReader("accid="+accid))
 	if err != nil {
 		return nil, err
@@ -238,6 +254,7 @@ func (this *User) UnBlock(accid string) (*BaseResp, error) {
 
 // UpdateUinfo ...
 func (this *User) UpdateUinfo(gender int, accid, name, icon, sign, email, birth, mobile, ex string) (*BaseResp, error) {
+	accid = this.PREFIX + accid
 	params := url.Values{"accid": {accid}, "name": {name}, "icon": {icon}, "sign": {sign}, "email": {email}, "birth": {birth}, "mobile": {mobile}, "ex": {ex}, "gender": {strconv.Itoa(gender)}}
 	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_UPDATE_UINFO, params)
 	if err != nil {
@@ -273,6 +290,7 @@ func (this *User) GetUinfo(accids []string) (*Uinfos, error) {
 
 // SetDonnop ...
 func (this *User) SetDonnop(accid string, donnopOpen bool) (*BaseResp, error) {
+	accid = this.PREFIX + accid
 	params := url.Values{"accid": {accid}, "donnopOpen": {strconv.FormatBool(donnopOpen)}}
 	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_USER_DONNOP_OPEN, params)
 	if err != nil {

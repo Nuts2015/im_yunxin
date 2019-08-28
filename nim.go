@@ -1,4 +1,4 @@
-package nimserversdk
+package yunxin
 
 import (
 	"crypto/sha1"

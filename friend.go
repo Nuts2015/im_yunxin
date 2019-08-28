@@ -1,4 +1,4 @@
-package nimserversdk
+package yunxin
 
 import (
 	"encoding/json"
@@ -60,7 +60,7 @@ func (this *Friend) UpdateFriend(accid, faccid, alias, ex string) (*BaseResp, er
 }
 
 // DeleeteFriend ...
-func (this *Friend) DeleeteFriend(accid, faccid string) (*BaseResp, error) {
+func (this *Friend) DeleteFriend(accid, faccid string) (*BaseResp, error) {
 	data, err := ResponseResult(this.APPKEY, this.APPSECRET, ACTION_FRIEND_DELETE, url.Values{"accid": {accid}, "faccid": {faccid}})
 	if err != nil {
 		return nil, err
